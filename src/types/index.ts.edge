@@ -1,0 +1,115 @@
+export interface GraphNode {
+  id: string
+  name: string
+  type: 'PERSON' | 'ORGANIZATION' | 'EMAIL' | 'DEAL'
+  val: number
+  role_type: string | null
+  org_type: string | null
+  first_seen: string | null
+  // force-graph runtime fields
+  x?: number
+  y?: number
+  fx?: number
+  fy?: number
+  color?: string
+}
+
+export interface GraphLink {
+  source: string | GraphNode
+  target: string | GraphNode
+  predicate: string
+  asserted_at: string | null
+  confidence: number | null
+}
+
+export interface GraphData {
+  nodes: GraphNode[]
+  links: GraphLink[]
+  total_nodes: number
+  total_links: number
+}
+
+export interface TimelineEvent {
+  email_id: string
+  subject: string
+  sent_at: string | null
+  from_name: string | null
+  from_email: string | null
+  intent: string | null
+  sentiment: string | null
+  deal_signal: string | null
+  entities: string[]
+}
+
+export interface EmailDetail {
+  email_id: string
+  subject: string
+  body_preview: string | null
+  sent_at: string | null
+  mailbox: string | null
+  has_attachments: boolean
+  extraction_status: string
+  participants: Participant[]
+  entities: EntityMention[]
+  attachments: Attachment[]
+  action_items: string[]
+}
+
+export interface Participant {
+  ROLE: string
+  RAW_NAME: string | null
+  RAW_EMAIL: string | null
+  PERSON_ID: string | null
+  ORGANIZATION_ID: string | null
+}
+
+export interface EntityMention {
+  ENTITY_TYPE: string
+  CANONICAL_NAME: string | null
+  ENTITY_ID: string | null
+  CONFIDENCE: number | null
+  CONTEXT_SNIPPET: string | null
+}
+
+export interface Attachment {
+  ATTACHMENT_ID: string
+  FILENAME: string
+  MIME_TYPE: string | null
+  SIZE_BYTES: number | null
+  BOX_URL: string | null
+  CONTENT_EXTRACTED: boolean
+}
+
+export interface Stats {
+  emails: number
+  persons: number
+  organizations: number
+  relationships: number
+  obligations: number
+  attachments: number
+  vectors: number
+  last_ingested: string | null
+}
+
+export interface SearchResult {
+  score: number
+  source_type: string
+  source_id: string
+  email_id: string
+  chunk_index: number
+  timestamp: string | null
+  subject: string | null
+  body_preview: string | null
+  filename: string | null
+}
+
+export interface GraphFilters {
+  from_date:         string | null
+  to_date:           string | null
+  entity_type:       string | null
+  limit:             number
+  min_connections:   number
+  max_hops:          number
+  source_types:      string[]  // filter by source: EMAIL, DOCUMENT, MEETING
+  doc_types:         string[] | null  // filter by document type
+}

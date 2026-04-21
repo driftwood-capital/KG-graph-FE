@@ -1,0 +1,86 @@
+import axios from 'axios'
+import type {
+  GraphData, GraphFilters, TimelineEvent,
+  EmailDetail, Stats, SearchResult,
+} from '../types'
+
+const api = axios.create({ baseURL: '/api' })
+
+export const fetchGraph = async (filters?: Partial<GraphFilters>): Promise<GraphData> => {
+  const { data } = await api.get('/graph', { params: filters })
+  return data
+}
+
+export const fetchEntitySubgraph = async (entityId: string, hops = 2): Promise<GraphData> => {
+  const { data } = await api.get(`/graph/${entityId}`, { params: { hops } })
+  return data
+}
+
+export const fetchTimeline = async (params?: {
+  entity_id?: string
+  intent?: string
+  from_date?: string
+  to_date?: string
+  limit?: number
+  offset?: number
+}): Promise<TimelineEvent[]> => {
+  const { data } = await api.get('/timeline', { params })
+  return data
+}
+
+export const fetchEmailDetail = async (emailId: string): Promise<EmailDetail> => {
+  const { data } = await api.get(`/timeline/${emailId}`)
+  return data
+}
+
+export const fetchStats = async (): Promise<Stats> => {
+  const { data } = await api.get('/stats')
+  return data
+}
+
+export const search = async (query: string, topK = 10): Promise<SearchResult[]> => {
+  const { data } = await api.post('/search', { query, top_k: topK })
+  return data
+}
+
+export const fetchMeetings = async (params?: {
+  limit?: number
+  platform?: string
+}): Promise<any[]> => {
+  const { data } = await api.get('/meetings', { params })
+  return data
+}
+
+export const fetchMeetingDetail = async (meetingId: string): Promise<any> => {
+  const { data } = await api.get(`/meetings/${meetingId}`)
+  return data
+}
+
+export const fetchEmailSummary = async (emailId: string): Promise<{ summary: string | null; action_items: string[] }> => {
+  const { data } = await api.get(`/emails/${emailId}/summary`)
+  return data
+}
+
+export const triggerIngest = async () => {
+  const { data } = await api.post('/ingest/run')
+  return data
+}
+
+export const fetchIngestStatus = async () => {
+  const { data } = await api.get('/ingest/status')
+  return data
+}
+
+export const fetchDeals = async (params?: {
+  deal_type?: string
+  fund?: string
+  status?: string
+}): Promise<any[]> => {
+  const { data } = await api.get('/deals', { params })
+  return data
+}
+
+export const fetchDeal = async (dealId: string): Promise<any> => {
+  const { data } = await api.get(`/deals/${dealId}`)
+  return data
+}
